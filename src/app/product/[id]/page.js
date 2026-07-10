@@ -21,6 +21,7 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [selectedImage, setSelectedImage] = useState(0);
+  const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
     if (!params?.id) return;
@@ -79,8 +80,6 @@ export default function ProductPage() {
     { q: 'What is your return policy?', a: 'We offer a 30-day no-questions-asked return policy. Items must be in original condition.' },
     { q: 'Is this product covered by warranty?', a: 'Yes, all products sold on ZAMEON come with a minimum 2-year warranty from the original brand.' },
   ];
-
-  const [openFaq, setOpenFaq] = useState(null);
 
   return (
     <div className={styles.page}>
