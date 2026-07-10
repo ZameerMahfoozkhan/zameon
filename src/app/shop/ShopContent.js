@@ -16,10 +16,9 @@ const sortOptions = [
 
 export default function ShopContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get('category') || '';
-  const initialCollection = searchParams.get('collection') || '';
 
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
+  const [selectedCollection, setSelectedCollection] = useState(searchParams.get('collection') || '');
   const [selectedBrand, setSelectedBrand] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [priceRange, setPriceRange] = useState([0, 100000]);
@@ -28,6 +27,12 @@ export default function ShopContent() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Sync state when URL params change (e.g. clicking Navbar links while already on /shop)
+  useEffect(() => {
+    setSelectedCategory(searchParams.get('category') || '');
+    setSelectedCollection(searchParams.get('collection') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     Promise.all([
@@ -46,10 +51,10 @@ export default function ShopContent() {
     let result = [...allProducts];
 
     if (selectedCategory) {
-      result = result.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase());
+      result = result.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase());
     }
-    if (initialCollection) {
-      result = result.filter((p) => p.collection === initialCollection);
+    if (selectedCollection) {
+      result = result.filter((p) => p.collection === selectedCollection);
     }
     if (selectedBrand) {
       result = result.filter((p) => p.brand === selectedBrand);
@@ -59,15 +64,16 @@ export default function ShopContent() {
     switch (sortBy) {
       case 'price-asc': result.sort((a, b) => a.price - b.price); break;
       case 'price-desc': result.sort((a, b) => b.price - a.price); break;
-      case 'rating': result.sort((a, b) => b.rating - a.rating); break;
+      case 'rating': result.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
       default: break;
     }
 
     return result;
-  }, [selectedCategory, selectedBrand, sortBy, priceRange, initialCollection]);
+  }, [allProducts, selectedCategory, selectedBrand, sortBy, priceRange, selectedCollection]);
 
   const clearFilters = () => {
     setSelectedCategory('');
+    setSelectedCollection('');
     setSelectedBrand('');
     setPriceRange([0, 100000]);
     setSortBy('featured');
