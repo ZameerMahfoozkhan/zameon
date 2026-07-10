@@ -13,14 +13,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function dumpProducts() {
-  const querySnapshot = await getDocs(collection(db, "products"));
-  console.log(`Found ${querySnapshot.size} products.`);
-  querySnapshot.forEach((doc) => {
-    console.log(`\nID: "${doc.id}"`);
-    console.log(JSON.stringify(doc.data(), null, 2));
-  });
-  process.exit(0);
+async function dump() {
+  const snapshot = await getDocs(collection(db, 'products'));
+  const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  console.log(JSON.stringify(products, null, 2));
 }
 
-dumpProducts().catch(console.error);
+dump().catch(console.error);
