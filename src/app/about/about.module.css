@@ -1,0 +1,27 @@
+.page { min-height: 60vh; }
+.hero { padding: var(--space-16) 0 var(--space-10); text-align: center; }
+.overline { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); color: var(--color-primary); margin-bottom: var(--space-3); }
+.heroTitle { font-size: var(--font-size-5xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); max-width: 720px; margin: 0 auto var(--space-5); }
+.heroDesc { font-size: var(--font-size-lg); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); max-width: 640px; margin: 0 auto; }
+.imageSection { padding-bottom: var(--space-16); }
+.imagePlaceholder { aspect-ratio: 21/9; background: linear-gradient(135deg, #F3F4F6, #E5E7EB); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; }
+.placeholderLabel { font-size: var(--font-size-sm); color: var(--color-text-tertiary); font-weight: var(--font-weight-medium); letter-spacing: var(--letter-spacing-wide); text-transform: uppercase; }
+.section { padding: var(--space-16) 0; }
+.sectionTitle { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); text-align: center; margin-bottom: var(--space-10); }
+.valuesGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+.valueCard { text-align: center; padding: var(--space-8) var(--space-5); background: var(--color-surface); border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); }
+.valueIcon { font-size: 2rem; display: block; margin-bottom: var(--space-4); }
+.valueName { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2); }
+.valueDesc { font-size: var(--font-size-sm); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); }
+.statsSection { padding: var(--space-12) 0; background: var(--color-text); color: white; }
+.statsGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-8); text-align: center; }
+.statNumber { font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); display: block; }
+.statLabel { font-size: var(--font-size-sm); color: rgba(255,255,255,0.5); margin-top: var(--space-1); display: block; }
+.teamDesc { text-align: center; color: var(--color-text-secondary); margin-top: calc(-1 * var(--space-6)); margin-bottom: var(--space-10); }
+.teamGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+.teamCard { text-align: center; }
+.teamImage { aspect-ratio: 1; background: linear-gradient(135deg, #F3F4F6, #E5E7EB); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; font-size: var(--font-size-xs); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); margin-bottom: var(--space-3); }
+.teamName { font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); }
+.teamRole { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+@media (max-width: 768px) { .valuesGrid, .statsGrid, .teamGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .valuesGrid, .statsGrid, .teamGrid { grid-template-columns: 1fr; } }

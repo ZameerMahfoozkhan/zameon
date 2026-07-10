@@ -1,0 +1,270 @@
+/* Admin specific variables to ensure it stays separate from storefront */
+.adminContainer {
+  --admin-sidebar-width: 280px;
+  --admin-header-height: 72px;
+  --admin-bg: #F3F4F6;
+  --admin-surface: #FFFFFF;
+  --admin-text: #111827;
+  --admin-text-secondary: #6B7280;
+  --admin-border: #E5E7EB;
+  
+  --admin-sidebar-bg: #111827;
+  --admin-sidebar-text: #F9FAFB;
+  --admin-sidebar-text-muted: #9CA3AF;
+  --admin-sidebar-hover: #1F2937;
+  --admin-sidebar-active: #374151;
+  --admin-sidebar-accent: #3B82F6;
+  
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-bg);
+  font-family: var(--font-family);
+}
+
+.sidebar {
+  width: var(--admin-sidebar-width);
+  background-color: var(--admin-sidebar-bg);
+  color: var(--admin-sidebar-text);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+}
+
+.sidebarHeader {
+  height: var(--admin-header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebarLogo {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-wider);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sidebarLogoSpan {
+  font-size: var(--font-size-xs);
+  background: var(--admin-sidebar-accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.sidebarNav {
+  flex: 1;
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--admin-sidebar-text-muted);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+}
+
+.navItem:hover {
+  background-color: var(--admin-sidebar-hover);
+  color: var(--admin-sidebar-text);
+}
+
+.navItemActive {
+  background-color: var(--admin-sidebar-active);
+  color: var(--admin-sidebar-text);
+  border-left: 3px solid var(--admin-sidebar-accent);
+}
+
+.sidebarFooter {
+  padding: var(--space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.adminAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--admin-sidebar-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.adminInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.adminName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.adminRole {
+  font-size: var(--font-size-xs);
+  color: var(--admin-sidebar-text-muted);
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: var(--admin-sidebar-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: var(--admin-header-height);
+  background: var(--admin-surface);
+  border-bottom: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.headerTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--admin-text);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: var(--admin-text-secondary);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.iconBtn:hover {
+  background: var(--admin-bg);
+  color: var(--admin-text);
+}
+
+.pageContent {
+  padding: var(--space-8);
+  flex: 1;
+}
+
+/* Reusable Admin Components */
+.card {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.tableContainer {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.tableHeader {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--admin-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  color: var(--admin-text-secondary);
+  border-bottom: 1px solid var(--admin-border);
+  background: #F9FAFB;
+}
+
+.table td {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--font-size-sm);
+  color: var(--admin-text);
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.badgeSuccess { background-color: rgba(16, 185, 129, 0.1); color: var(--color-success); }
+.badgeWarning { background-color: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+.badgeError { background-color: rgba(239, 68, 68, 0.1); color: var(--color-error); }
+.badgeNeutral { background-color: rgba(107, 114, 128, 0.1); color: var(--admin-text-secondary); }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Login Page specific */
+.loginContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--admin-bg);
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 400px;
+  background: var(--admin-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8);
+}

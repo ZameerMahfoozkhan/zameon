@@ -1,0 +1,18 @@
+.page { padding: var(--space-10) 0 var(--space-20); min-height: 60vh; }
+.header { text-align: center; margin-bottom: var(--space-12); }
+.overline { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider); color: var(--color-primary); margin-bottom: var(--space-3); }
+.title { font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); margin-bottom: var(--space-3); }
+.desc { font-size: var(--font-size-lg); color: var(--color-text-secondary); max-width: 480px; margin: 0 auto; }
+.content { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-10); }
+.group { display: flex; flex-direction: column; gap: var(--space-1); }
+.groupTitle { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-4); color: var(--color-text); }
+.items { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+.item { border-bottom: 1px solid var(--color-border-light); }
+.item:last-child { border-bottom: none; }
+.question { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) var(--space-5); font-size: var(--font-size-base); font-weight: var(--font-weight-medium); color: var(--color-text); background: var(--color-surface); border: none; cursor: pointer; text-align: left; transition: background var(--transition-fast); }
+.question:hover { background: var(--color-border-light); }
+.answer { padding: 0 var(--space-5) var(--space-4); }
+.answer p { font-size: var(--font-size-sm); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); }
+.cta { text-align: center; padding: var(--space-12) 0; margin-top: var(--space-10); border-top: 1px solid var(--color-border-light); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+.cta h3 { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); }
+.cta p { color: var(--color-text-secondary); }

@@ -1,0 +1,477 @@
+[
+  {
+    "id": "zen-pro-headphones",
+    "name": "Zen Pro Wireless Headphones",
+    "brand": "ZAMEON Audio",
+    "category": "Audio",
+    "collection": "Signature Series",
+    "price": 27920,
+    "originalPrice": 35920,
+    "badge": "Best Seller",
+    "rating": 4.8,
+    "reviewCount": 1247,
+    "description": "Immersive sound meets minimal design. The Zen Pro features 40mm custom drivers, adaptive noise cancellation, and 60-hour battery life wrapped in aerospace-grade aluminum.",
+    "features": [
+      "40mm Custom Neodymium Drivers",
+      "Adaptive Active Noise Cancellation",
+      "60-Hour Battery Life",
+      "Aerospace-Grade Aluminum Build",
+      "Bluetooth 5.3 with Multipoint",
+      "Hi-Res Audio Certified"
+    ],
+    "specs": {
+      "Driver Size": "40mm",
+      "Frequency Response": "4Hz – 40kHz",
+      "Impedance": "32Ω",
+      "Battery": "60 hours (ANC on)",
+      "Charging": "USB-C, 10min = 5hrs",
+      "Weight": "254g",
+      "Connectivity": "Bluetooth 5.3, 3.5mm"
+    },
+    "variants": {
+      "color": [
+        "Matte Black",
+        "Arctic White",
+        "Midnight Blue"
+      ]
+    },
+    "images": 5,
+    "inStock": true,
+    "freeShipping": true
+  },
+  {
+    "id": "pulse-smartwatch",
+    "name": "Pulse Ultra Smartwatch",
+    "brand": "ZAMEON Wearables",
+    "category": "Wearables",
+    "collection": "Active Line",
+    "price": 23920,
+    "originalPrice": null,
+    "badge": "New",
+    "rating": 4.6,
+    "reviewCount": 583,
+    "description": "Track every heartbeat with surgical precision. Pulse Ultra combines a stunning AMOLED display with advanced health sensors in a titanium chassis that's built to move with you.",
+    "features": [
+      "1.43\" AMOLED Always-On Display",
+      "Titanium Grade 5 Case",
+      "Advanced Heart Rate & SpO2 Sensors",
+      "14-Day Battery Life",
+      "5ATM Water Resistance",
+      "100+ Sport Modes"
+    ],
+    "specs": {
+      "Display": "1.43\" AMOLED, 466x466px",
+      "Case Material": "Titanium Grade 5",
+      "Battery": "14 days typical",
+      "Water Rating": "5ATM",
+      "Sensors": "HR, SpO2, Temperature, Barometer",
+      "Connectivity": "BT 5.2, GPS, NFC",
+      "Weight": "37g (without strap)"
+    },
+    "variants": {
+      "color": [
+        "Titanium Silver",
+        "Stealth Black",
+        "Rose Gold"
+      ],
+      "size": [
+        "42mm",
+        "46mm"
+      ]
+    },
+    "images": 5,
+    "inStock": true,
+    "freeShipping": true
+  },
+  {
+    "id": "aura-speaker",
+    "name": "Aura 360 Speaker",
+    "brand": "ZAMEON Audio",
+    "category": "Audio",
+    "collection": "Home Series",
+    "price": 15920,
+    "originalPrice": 19920,
+    "badge": "Sale",
+    "rating": 4.7,
+    "reviewCount": 892,
+    "description": "Room-filling 360° sound from a sculpture-worthy form. Aura blends hand-finished acoustic mesh with spatial audio technology for an experience that transforms any space.",
+    "features": [
+      "360° Spatial Audio",
+      "Hand-Finished Acoustic Mesh",
+      "24-Hour Battery Life",
+      "IPX5 Water Resistant",
+      "Multi-Room Pairing",
+      "Voice Assistant Built-in"
+    ],
+    "specs": {
+      "Drivers": "2x 20mm tweeters, 1x 55mm woofer",
+      "Output": "30W RMS",
+      "Battery": "24 hours",
+      "Water Rating": "IPX5",
+      "Connectivity": "Bluetooth 5.3, Wi-Fi, AUX",
+      "Weight": "680g",
+      "Dimensions": "110 × 110 × 165mm"
+    },
+    "variants": {
+      "color": [
+        "Charcoal",
+        "Sand",
+        "Sage Green"
+      ]
+    },
+    "images": 4,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "nova-laptop-stand",
+    "name": "Nova Ergonomic Laptop Stand",
+    "brand": "ZAMEON Workspace",
+    "category": "Workspace",
+    "collection": "Studio Collection",
+    "price": 7120,
+    "originalPrice": null,
+    "badge": null,
+    "rating": 4.9,
+    "reviewCount": 2104,
+    "description": "Elevate your setup. CNC-machined from a single block of aluminum with an integrated cable channel and heat-dissipating ventilation pattern.",
+    "features": [
+      "CNC-Machined Aluminum",
+      "Adjustable Height (3 positions)",
+      "Integrated Cable Management",
+      "Heat-Dissipating Ventilation",
+      "Supports up to 18\" Laptops",
+      "Non-Slip Silicone Pads"
+    ],
+    "specs": {
+      "Material": "6063 Aluminum Alloy",
+      "Max Laptop Size": "18 inches",
+      "Height Options": "12cm / 15cm / 18cm",
+      "Weight Capacity": "15kg",
+      "Product Weight": "1.2kg",
+      "Dimensions": "280 × 240 × 180mm"
+    },
+    "variants": {
+      "color": [
+        "Space Gray",
+        "Silver"
+      ]
+    },
+    "images": 4,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "flux-charger",
+    "name": "Flux 3-in-1 Wireless Charger",
+    "brand": "ZAMEON Power",
+    "category": "Accessories",
+    "collection": "Essentials",
+    "price": 6320,
+    "originalPrice": 7920,
+    "badge": "Popular",
+    "rating": 4.5,
+    "reviewCount": 1567,
+    "description": "One surface. Three devices charged. Flux uses aligned MagSafe-compatible coils to simultaneously power your phone, earbuds, and watch at maximum speed.",
+    "features": [
+      "15W Fast Wireless Charging",
+      "MagSafe Compatible Alignment",
+      "Charges 3 Devices Simultaneously",
+      "Foreign Object Detection",
+      "LED Charging Indicators",
+      "Premium Vegan Leather Surface"
+    ],
+    "specs": {
+      "Max Output": "15W (phone), 5W (watch), 5W (earbuds)",
+      "Input": "USB-C PD 30W",
+      "Compatibility": "Qi / MagSafe",
+      "Material": "Aluminum + Vegan Leather",
+      "Dimensions": "200 × 90 × 12mm",
+      "Weight": "310g",
+      "Cable": "1.5m braided USB-C included"
+    },
+    "variants": {
+      "color": [
+        "Black",
+        "White"
+      ]
+    },
+    "images": 4,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "clarity-monitor",
+    "name": "Clarity 4K Monitor",
+    "brand": "ZAMEON Display",
+    "category": "Workspace",
+    "collection": "Studio Collection",
+    "price": 55920,
+    "originalPrice": null,
+    "badge": "New",
+    "rating": 4.7,
+    "reviewCount": 341,
+    "description": "See everything with perfect precision. A 27-inch 4K IPS display with factory-calibrated color accuracy, USB-C 96W delivery, and a near-borderless design that disappears into your workspace.",
+    "features": [
+      "27\" 4K IPS Panel (3840×2160)",
+      "Factory Calibrated ΔE < 1",
+      "USB-C 96W Power Delivery",
+      "Built-in KVM Switch",
+      "Nano-Texture Anti-Glare Option",
+      "Height/Tilt/Swivel/Pivot Adjustable"
+    ],
+    "specs": {
+      "Panel": "27\" IPS, 4K UHD",
+      "Color": "DCI-P3 98%, sRGB 100%",
+      "Brightness": "600 nits (HDR 600)",
+      "Refresh Rate": "60Hz",
+      "Ports": "USB-C (96W), HDMI 2.1, DP 1.4, USB-A ×3",
+      "VESA": "100×100mm",
+      "Weight": "5.8kg"
+    },
+    "variants": {
+      "color": [
+        "Space Gray"
+      ]
+    },
+    "images": 5,
+    "inStock": true,
+    "freeShipping": true
+  },
+  {
+    "id": "echo-earbuds",
+    "name": "Echo ANC Earbuds",
+    "brand": "ZAMEON Audio",
+    "category": "Audio",
+    "collection": "Signature Series",
+    "price": 14320,
+    "originalPrice": 17520,
+    "badge": "Best Seller",
+    "rating": 4.6,
+    "reviewCount": 3201,
+    "description": "Silence the world. Echo earbuds deliver studio-grade ANC with transparency mode, adaptive EQ, and a ceramic-coated case that fits like jewelry.",
+    "features": [
+      "Hybrid Active Noise Cancellation",
+      "Adaptive EQ with Ear Detection",
+      "Ceramic-Coated Charging Case",
+      "32-Hour Total Battery",
+      "IPX5 Sweat Resistant",
+      "Spatial Audio with Head Tracking"
+    ],
+    "specs": {
+      "Driver": "11mm Dynamic + BA",
+      "ANC Depth": "Up to 45dB",
+      "Battery": "8hrs (buds) + 24hrs (case)",
+      "Charging": "USB-C + Qi Wireless",
+      "Water Rating": "IPX5",
+      "Weight": "5.4g per earbud",
+      "Codec": "AAC, LDAC, aptX Adaptive"
+    },
+    "variants": {
+      "color": [
+        "Obsidian",
+        "Pearl",
+        "Midnight"
+      ]
+    },
+    "images": 4,
+    "inStock": true,
+    "freeShipping": true
+  },
+  {
+    "id": "drift-backpack",
+    "name": "Drift Tech Backpack",
+    "brand": "ZAMEON Lifestyle",
+    "category": "Lifestyle",
+    "collection": "Urban Collection",
+    "price": 11920,
+    "originalPrice": null,
+    "badge": null,
+    "rating": 4.8,
+    "reviewCount": 756,
+    "description": "Engineered for modern commuters. Drift features a dedicated laptop compartment with magnetic closure, waterproof recycled fabric, and a hidden anti-theft pocket.",
+    "features": [
+      "Waterproof Recycled Nylon",
+      "Padded 16\" Laptop Compartment",
+      "Magnetic Closure System",
+      "Hidden Anti-Theft Back Pocket",
+      "Luggage Pass-Through Strap",
+      "YKK AquaGuard Zippers"
+    ],
+    "specs": {
+      "Material": "900D Recycled Nylon",
+      "Volume": "25L",
+      "Laptop Fit": "Up to 16 inches",
+      "Waterproof": "IPX4",
+      "Weight": "0.85kg",
+      "Dimensions": "460 × 300 × 150mm",
+      "Warranty": "Lifetime"
+    },
+    "variants": {
+      "color": [
+        "Graphite",
+        "Navy",
+        "Olive"
+      ]
+    },
+    "images": 5,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "prism-desk-lamp",
+    "name": "Prism LED Desk Lamp",
+    "brand": "ZAMEON Home",
+    "category": "Home",
+    "collection": "Studio Collection",
+    "price": 10320,
+    "originalPrice": null,
+    "badge": null,
+    "rating": 4.7,
+    "reviewCount": 489,
+    "description": "Light, reimagined. Prism delivers flicker-free illumination through a gravity-defying arm with stepless brightness and color temperature control.",
+    "features": [
+      "Flicker-Free LED Technology",
+      "Stepless Brightness & Color Control",
+      "2700K–6500K Color Temperature",
+      "Built-in 10W Wireless Charger",
+      "Memory Function",
+      "CRI > 97"
+    ],
+    "specs": {
+      "Power": "12W LED",
+      "Color Temperature": "2700K – 6500K",
+      "CRI": "> 97",
+      "Wireless Charger": "10W Qi",
+      "Material": "Aluminum + Silicone",
+      "Height": "450mm (max)",
+      "Weight": "1.1kg"
+    },
+    "variants": {
+      "color": [
+        "Matte Black",
+        "Matte White"
+      ]
+    },
+    "images": 3,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "atlas-power-bank",
+    "name": "Atlas Power Bank 20K",
+    "brand": "ZAMEON Power",
+    "category": "Accessories",
+    "collection": "Essentials",
+    "price": 4720,
+    "originalPrice": null,
+    "badge": null,
+    "rating": 4.4,
+    "reviewCount": 2890,
+    "description": "Power that travels. Atlas packs 20,000mAh into a pocket-friendly anodized aluminum shell with 65W bi-directional fast charging and a real-time LED display.",
+    "features": [
+      "20,000mAh Capacity",
+      "65W USB-C PD Fast Charging",
+      "Bi-directional Charging",
+      "LED Power Display",
+      "Airline Approved",
+      "Charge 3 Devices Simultaneously"
+    ],
+    "specs": {
+      "Capacity": "20,000mAh / 74Wh",
+      "Max Output": "65W USB-C PD",
+      "Ports": "USB-C ×2, USB-A ×1",
+      "Material": "Anodized Aluminum",
+      "Dimensions": "135 × 68 × 25mm",
+      "Weight": "380g",
+      "Certifications": "FCC, CE, Airline Safe"
+    },
+    "variants": {
+      "color": [
+        "Gunmetal",
+        "Silver"
+      ]
+    },
+    "images": 3,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "horizon-webcam",
+    "name": "Horizon 4K Webcam",
+    "brand": "ZAMEON Display",
+    "category": "Workspace",
+    "collection": "Studio Collection",
+    "price": 14320,
+    "originalPrice": 15920,
+    "badge": "Sale",
+    "rating": 4.5,
+    "reviewCount": 612,
+    "description": "Look your best on every call. Horizon captures 4K at 30fps with an f/1.8 wide-aperture lens, auto-framing AI, and studio-quality dual microphones.",
+    "features": [
+      "4K 30fps / 1080p 60fps",
+      "f/1.8 Wide Aperture Lens",
+      "AI Auto-Framing",
+      "Dual Beamforming Microphones",
+      "Privacy Shutter",
+      "Magnetic Monitor Mount"
+    ],
+    "specs": {
+      "Resolution": "4K (3840×2160) @ 30fps",
+      "Lens": "f/1.8, 85° FOV",
+      "Autofocus": "Yes, with AI framing",
+      "Microphone": "Dual omnidirectional",
+      "Connection": "USB-C 3.0",
+      "Mount": "Magnetic clip + 1/4\" tripod",
+      "Weight": "120g"
+    },
+    "variants": {
+      "color": [
+        "Black"
+      ]
+    },
+    "images": 3,
+    "inStock": true,
+    "freeShipping": false
+  },
+  {
+    "id": "muse-keyboard",
+    "name": "Muse Mechanical Keyboard",
+    "brand": "ZAMEON Workspace",
+    "category": "Workspace",
+    "collection": "Studio Collection",
+    "price": 13520,
+    "originalPrice": null,
+    "badge": "New",
+    "rating": 4.8,
+    "reviewCount": 421,
+    "description": "Type with intention. Muse combines hot-swappable Gateron switches with sound-dampened construction and a minimalist 75% layout carved from aluminum.",
+    "features": [
+      "75% Compact Layout",
+      "Hot-Swappable Gateron Pro Switches",
+      "CNC Aluminum Case",
+      "Double-Shot PBT Keycaps",
+      "Sound-Dampening Foam Layers",
+      "Bluetooth + 2.4GHz + USB-C"
+    ],
+    "specs": {
+      "Layout": "75% (84 keys)",
+      "Switches": "Gateron Pro 3.0 (Hot-swap)",
+      "Keycaps": "Double-Shot PBT",
+      "Battery": "4000mAh (200+ hours)",
+      "Connectivity": "BT 5.1, 2.4GHz dongle, USB-C",
+      "Material": "CNC Aluminum + Silicone dampening",
+      "Weight": "920g"
+    },
+    "variants": {
+      "color": [
+        "Space Gray",
+        "Silver",
+        "Midnight Green"
+      ]
+    },
+    "images": 5,
+    "inStock": true,
+    "freeShipping": true
+  }
+]
