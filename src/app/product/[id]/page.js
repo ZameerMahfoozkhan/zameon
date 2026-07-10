@@ -74,6 +74,24 @@ export default function ProductPage() {
     addToCart(product, variant, quantity);
   };
 
+  const handleShare = async () => {
+    const shareData = {
+      title: product.name,
+      text: `Check out ${product.name} on ZAMEON — ${formatPrice(product.price)}`,
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+      }
+    } catch (err) {
+      // User cancelled or error
+    }
+  };
+
   const faqItems = [
     { q: 'What\'s included in the box?', a: `Your ${product.name}, USB-C charging cable, quick start guide, and warranty card.` },
     { q: 'How long does shipping take?', a: 'Standard shipping takes 3-5 business days across India. Express shipping delivers in 1-2 business days.' },
@@ -230,6 +248,20 @@ export default function ProductPage() {
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill={wished ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
                       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    </svg>
+                  </button>
+                  <button
+                    className={`btn btn-outline btn-icon ${styles.shareBtn}`}
+                    onClick={handleShare}
+                    aria-label="Share this product"
+                    style={{ width: 48, height: 48 }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="18" cy="5" r="3"/>
+                      <circle cx="6" cy="12" r="3"/>
+                      <circle cx="18" cy="19" r="3"/>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
                     </svg>
                   </button>
                 </div>

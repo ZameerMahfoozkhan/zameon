@@ -13,6 +13,13 @@ const reviews = [
   { name: 'James Wright', role: 'Architect', text: 'The Nova laptop stand elevated my desk setup from functional to stunning. The cable management alone is worth it.', rating: 5 },
 ];
 
+const stats = [
+  { value: '25K+', label: 'Products Sold' },
+  { value: '4.9', label: 'Average Rating' },
+  { value: '50+', label: 'Premium Brands' },
+  { value: '99%', label: 'Happy Customers' },
+];
+
 export default function HomePage() {
   const revealRefs = useRef([]);
   const [products, setProducts] = useState([]);
@@ -51,11 +58,24 @@ export default function HomePage() {
     <>
       {/* ======================== HERO ======================== */}
       <section className={styles.hero} id="hero-section">
+        {/* Animated gradient orbs */}
+        <div className={styles.heroOrbs} aria-hidden="true">
+          <div className={`${styles.orb} ${styles.orb1}`} />
+          <div className={`${styles.orb} ${styles.orb2}`} />
+          <div className={`${styles.orb} ${styles.orb3}`} />
+        </div>
+
+        {/* Subtle grid overlay */}
+        <div className={styles.heroGrid} aria-hidden="true" />
+
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <p className={styles.heroOverline}>The Future of Premium Tech</p>
+            <div className={styles.heroBadge}>
+              <span className={styles.heroBadgeDot} />
+              The Future of Premium Tech
+            </div>
             <h1 className={styles.heroTitle}>
-              Products designed for <span className={styles.heroAccent}>how you live</span>
+              Products designed{'\n'}for <span className={styles.heroAccent}>how you live</span>
             </h1>
             <p className={styles.heroDesc}>
               Handpicked gadgets, audio, and workspace essentials from the world's best brands — curated for quality, design, and performance.
@@ -67,24 +87,32 @@ export default function HomePage() {
                   <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                 </svg>
               </Link>
-              <Link href="/about" className="btn btn-outline btn-lg">Our Story</Link>
+              <Link href="/about" className={styles.heroOutlineBtn}>Our Story</Link>
             </div>
+
+            {/* Trust badges — glassmorphism */}
             <div className={styles.heroTrust}>
-              <div className={styles.trustItem}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                Free Shipping
-              </div>
-              <div className={styles.trustItem}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                2-Year Warranty
-              </div>
-              <div className={styles.trustItem}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                30-Day Returns
-              </div>
+              {[
+                { icon: '🚀', text: 'Free Shipping' },
+                { icon: '🛡️', text: '2-Year Warranty' },
+                { icon: '↩️', text: '30-Day Returns' },
+              ].map((item, i) => (
+                <div key={i} className={styles.trustBadge}>
+                  <span>{item.icon}</span>
+                  {item.text}
+                </div>
+              ))}
             </div>
           </div>
-          <div className={styles.heroImage}>
+
+          {/* Stats */}
+          <div className={styles.heroStats}>
+            {stats.map((stat, i) => (
+              <div key={i} className={styles.statItem} style={{ animationDelay: `${0.5 + i * 0.1}s` }}>
+                <span className={styles.statValue}>{stat.value}</span>
+                <span className={styles.statLabel}>{stat.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -95,7 +123,10 @@ export default function HomePage() {
         <div className="container reveal" ref={addRevealRef}>
           <div className={styles.sectionHeader}>
             <div>
-              <p className={styles.overline}>Trending</p>
+              <p className={styles.overline}>
+                <span className={styles.overlineBar} />
+                Trending
+              </p>
               <h2 className={styles.sectionTitle}>Popular Right Now</h2>
             </div>
             <Link href="/shop" className="btn btn-outline">
@@ -117,17 +148,22 @@ export default function HomePage() {
       <section className={styles.whySection} id="why-section">
         <div className="container reveal" ref={addRevealRef}>
           <div className={styles.sectionHeader} style={{ textAlign: 'center' }}>
-            <p className={styles.overline}>Why Choose Us</p>
-            <h2 className={styles.sectionTitle}>The ZAMEON Difference</h2>
+            <div style={{ width: '100%' }}>
+              <p className={styles.overline} style={{ justifyContent: 'center' }}>
+                <span className={styles.overlineBar} />
+                Why Choose Us
+              </p>
+              <h2 className={styles.sectionTitle}>The ZAMEON Difference</h2>
+            </div>
           </div>
           <div className={styles.whyGrid}>
             {[
-              { icon: '🚀', title: 'Free Express Shipping', desc: 'Complimentary 2-day delivery on all orders over ₹8000. Because waiting is overrated.' },
-              { icon: '🛡️', title: 'Secure Checkout', desc: '256-bit SSL encryption with PCI DSS compliance. Your data is always protected.' },
-              { icon: '↩️', title: '30-Day Easy Returns', desc: 'Not satisfied? Return any product within 30 days for a full refund, no questions asked.' },
-              { icon: '🏆', title: '2-Year Warranty', desc: 'Every product backed by our comprehensive warranty. We stand behind what we sell.' },
+              { icon: '🚀', title: 'Free Express Shipping', desc: 'Complimentary 2-day delivery on all orders over ₹8000. Because waiting is overrated.', gradient: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(99,102,241,0.05))' },
+              { icon: '🛡️', title: 'Secure Checkout', desc: '256-bit SSL encryption with PCI DSS compliance. Your data is always protected.', gradient: 'linear-gradient(135deg, rgba(34,197,94,0.1), rgba(6,182,212,0.05))' },
+              { icon: '↩️', title: '30-Day Easy Returns', desc: 'Not satisfied? Return any product within 30 days for a full refund, no questions asked.', gradient: 'linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.05))' },
+              { icon: '🏆', title: '2-Year Warranty', desc: 'Every product backed by our comprehensive warranty. We stand behind what we sell.', gradient: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.05))' },
             ].map((item, i) => (
-              <div key={i} className={`${styles.whyCard} reveal reveal-delay-${i + 1}`} ref={addRevealRef}>
+              <div key={i} className={`${styles.whyCard} reveal reveal-delay-${i + 1}`} ref={addRevealRef} style={{ background: item.gradient }}>
                 <span className={styles.whyIcon}>{item.icon}</span>
                 <h3 className={styles.whyTitle}>{item.title}</h3>
                 <p className={styles.whyDesc}>{item.desc}</p>
@@ -142,26 +178,22 @@ export default function HomePage() {
         <div className="container reveal" ref={addRevealRef}>
           <div className={styles.sectionHeader}>
             <div>
-              <p className={styles.overline}>Curated</p>
+              <p className={styles.overline}>
+                <span className={styles.overlineBar} />
+                Curated
+              </p>
               <h2 className={styles.sectionTitle}>Featured Collections</h2>
             </div>
           </div>
           <div className={styles.collectionGrid}>
             {[
-              { name: 'Signature Series', desc: 'Our flagship products. Uncompromising quality meets timeless design.', tag: '4 Products' },
-              { name: 'Studio Collection', desc: 'Everything you need to build the perfect creative workspace.', tag: '5 Products' },
-              { name: 'Essentials', desc: 'The everyday carry. Power, connectivity, and protection on the go.', tag: '2 Products' },
+              { name: 'Signature Series', desc: 'Our flagship products. Uncompromising quality meets timeless design.', tag: '4 Products', gradient: 'linear-gradient(135deg, #6366F1, #8B5CF6, #A855F7)' },
+              { name: 'Studio Collection', desc: 'Everything you need to build the perfect creative workspace.', tag: '5 Products', gradient: 'linear-gradient(135deg, #3B82F6, #06B6D4, #14B8A6)' },
+              { name: 'Essentials', desc: 'The everyday carry. Power, connectivity, and protection on the go.', tag: '2 Products', gradient: 'linear-gradient(135deg, #F59E0B, #EF4444, #EC4899)' },
             ].map((col, i) => (
               <Link key={i} href={`/shop?collection=${encodeURIComponent(col.name)}`} className={`${styles.collectionCard} reveal reveal-delay-${i + 1}`} ref={addRevealRef}>
-                <div className={styles.collectionImage}>
-                  <span className={styles.placeholderLabel}>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.25}}>
-                      <rect width="18" height="18" x="3" y="3" rx="2"/>
-                      <circle cx="9" cy="9" r="2"/>
-                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                    </svg>
-                    Collection Banner
-                  </span>
+                <div className={styles.collectionImage} style={{ background: col.gradient }}>
+                  <span className={styles.collectionImageLabel}>{col.name}</span>
                 </div>
                 <div className={styles.collectionOverlay}>
                   <span className={styles.collectionTag}>{col.tag}</span>
@@ -181,18 +213,22 @@ export default function HomePage() {
           <div className={`${styles.storyInner} reveal`} ref={addRevealRef}>
             <div className={styles.storyImage}>
               <div className={styles.storyPlaceholder}>
-                <span className={styles.placeholderLabel}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.25}}>
-                    <rect width="18" height="18" x="3" y="3" rx="2"/>
-                    <circle cx="9" cy="9" r="2"/>
-                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                  </svg>
-                  Brand Story Image
-                </span>
+                <div className={styles.storyGradientBorder}>
+                  <span className={styles.storyLabel}>
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="32" height="32" rx="6" fill="currentColor" opacity="0.3"/>
+                      <path d="M8 10H24L12 22H24" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Our Story
+                  </span>
+                </div>
               </div>
             </div>
             <div className={styles.storyContent}>
-              <p className={styles.overline}>Our Story</p>
+              <p className={styles.overline}>
+                <span className={styles.overlineBar} />
+                Our Story
+              </p>
               <h2 className={styles.sectionTitle}>Born from a belief that technology should be beautiful</h2>
               <p className={styles.storyText}>
                 ZAMEON started with a simple question: why is it so hard to find quality tech products in India? We set out to change that — curating the finest technology from around the world and bringing it to your doorstep.
@@ -212,8 +248,13 @@ export default function HomePage() {
       <section className={styles.section} id="reviews-section">
         <div className="container reveal" ref={addRevealRef}>
           <div className={styles.sectionHeader} style={{ textAlign: 'center' }}>
-            <p className={styles.overline}>Testimonials</p>
-            <h2 className={styles.sectionTitle}>Loved by Creators & Professionals</h2>
+            <div style={{ width: '100%' }}>
+              <p className={styles.overline} style={{ justifyContent: 'center' }}>
+                <span className={styles.overlineBar} />
+                Testimonials
+              </p>
+              <h2 className={styles.sectionTitle}>Loved by Creators & Professionals</h2>
+            </div>
           </div>
           <div className={styles.reviewScroll}>
             {reviews.map((review, i) => (
@@ -241,11 +282,18 @@ export default function HomePage() {
 
       {/* ======================== NEWSLETTER ======================== */}
       <section className={styles.newsletterSection} id="newsletter-section">
-        <div className="container">
+        <div className={styles.newsletterOrbs} aria-hidden="true">
+          <div className={`${styles.orb} ${styles.orbSmall1}`} />
+          <div className={`${styles.orb} ${styles.orbSmall2}`} />
+        </div>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className={`${styles.newsletterInner} reveal`} ref={addRevealRef}>
             <div className={styles.newsletterContent}>
-              <p className={styles.overline}>Stay in the Loop</p>
-              <h2 className={styles.sectionTitle}>Get early access to new drops</h2>
+              <p className={styles.overline} style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <span className={styles.overlineBar} />
+                Stay in the Loop
+              </p>
+              <h2 className={styles.newsletterTitle}>Get early access to new drops</h2>
               <p className={styles.newsletterDesc}>
                 Join 25,000+ subscribers who get first access to new products, exclusive deals, and design stories. No spam — just the good stuff.
               </p>
@@ -260,18 +308,6 @@ export default function HomePage() {
                 <button type="submit" className="btn btn-primary">Subscribe</button>
               </form>
               <p className={styles.newsletterNote}>By subscribing, you agree to our Privacy Policy.</p>
-            </div>
-            <div className={styles.newsletterImage}>
-              <div className={styles.newsletterPlaceholder}>
-                <span className={styles.placeholderLabel}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.25}}>
-                    <rect width="18" height="18" x="3" y="3" rx="2"/>
-                    <circle cx="9" cy="9" r="2"/>
-                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                  </svg>
-                  Newsletter Illustration
-                </span>
-              </div>
             </div>
           </div>
         </div>

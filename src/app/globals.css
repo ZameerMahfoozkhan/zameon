@@ -110,6 +110,21 @@
   --max-width-narrow: 960px;
   --nav-height: 72px;
   --announcement-height: 40px;
+
+  /* --- Dark Theme (Hero, Newsletter) --- */
+  --color-dark-bg: #0A0A0F;
+  --color-dark-surface: rgba(255, 255, 255, 0.04);
+  --color-dark-border: rgba(255, 255, 255, 0.08);
+  --color-dark-text: #F9FAFB;
+  --color-dark-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-dark-text-tertiary: rgba(255, 255, 255, 0.35);
+
+  /* --- Gradients --- */
+  --gradient-primary: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #EC4899 100%);
+  --gradient-accent: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%);
+  --gradient-warm: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+  --gradient-cool: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
+  --gradient-dark: linear-gradient(180deg, #0A0A0F 0%, #12121A 50%, #0A0A0F 100%);
 }
 
 /* ============================================
@@ -355,6 +370,38 @@ p {
   100% { transform: translateX(-50%); }
 }
 
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+@keyframes floatReverse {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-25px, 20px) scale(0.95); }
+  66% { transform: translate(15px, -25px) scale(1.05); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes orbitSlow {
+  0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+
+@keyframes announcementShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 /* Skeleton loading */
 .skeleton {
   background: linear-gradient(
@@ -406,13 +453,15 @@ p {
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
   color: white;
+  border: none;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-hover);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  animation: gradientShift 3s ease infinite;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4), 0 0 40px rgba(139, 92, 246, 0.15);
 }
 
 .btn-secondary {

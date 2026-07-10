@@ -2,6 +2,17 @@
   background: var(--color-text);
   color: white;
   padding: var(--space-16) 0 var(--space-8);
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
 }
 
 .container {
@@ -56,11 +67,13 @@
   border-radius: var(--radius-full);
   color: rgba(255, 255, 255, 0.5);
   transition: all var(--transition-fast);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .socialLink:hover {
   color: white;
   background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Columns */
@@ -158,6 +171,8 @@
     flex-wrap: wrap;
     justify-content: center;
   }
+}
+
 @media (max-width: 480px) {
   .top {
     grid-template-columns: repeat(2, 1fr);

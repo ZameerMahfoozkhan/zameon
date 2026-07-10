@@ -8,7 +8,9 @@
   right: 0;
   z-index: var(--z-sticky);
   height: var(--announcement-height);
-  background: var(--color-text);
+  background: linear-gradient(90deg, #111827 0%, #1E293B 50%, #111827 100%);
+  background-size: 200% 100%;
+  animation: announcementShimmer 8s ease-in-out infinite;
   color: white;
   display: flex;
   align-items: center;
