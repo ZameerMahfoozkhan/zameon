@@ -85,16 +85,6 @@ export default function HomePage() {
             </div>
           </div>
           <div className={styles.heroImage}>
-            <div className={styles.heroPlaceholder}>
-              <span className={styles.placeholderLabel}>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.25}}>
-                  <rect width="18" height="18" x="3" y="3" rx="2"/>
-                  <circle cx="9" cy="9" r="2"/>
-                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                </svg>
-                Hero Product Image · 16:9
-              </span>
-            </div>
           </div>
         </div>
       </section>

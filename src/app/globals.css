@@ -610,10 +610,10 @@ p {
 
 @media (max-width: 768px) {
   :root {
-    --font-size-display: 2.75rem;
-    --font-size-5xl: 2rem;
-    --font-size-4xl: 1.75rem;
-    --font-size-3xl: 1.5rem;
+    --font-size-display: 2.25rem;
+    --font-size-5xl: 1.75rem;
+    --font-size-4xl: 1.5rem;
+    --font-size-3xl: 1.25rem;
     --nav-height: 64px;
   }
 
@@ -623,8 +623,8 @@ p {
   }
 
   .section {
-    padding-top: var(--space-14);
-    padding-bottom: var(--space-14);
+    padding-top: var(--space-10);
+    padding-bottom: var(--space-10);
   }
 
   .grid-2, .grid-3, .grid-4 {
@@ -634,8 +634,15 @@ p {
 
 @media (max-width: 480px) {
   :root {
-    --font-size-display: 2.25rem;
-    --font-size-5xl: 1.75rem;
+    --font-size-display: 1.875rem;
+    --font-size-5xl: 1.5rem;
+    --font-size-4xl: 1.25rem;
+    --font-size-3xl: 1.125rem;
+  }
+
+  .container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
   }
 
   .grid-2, .grid-3, .grid-4 {

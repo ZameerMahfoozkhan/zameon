@@ -105,12 +105,16 @@
   .productGrid { grid-template-columns: 1fr; gap: var(--space-8); }
   .gallery { position: static; }
   .purchasePanel { position: static; }
-  .relatedGrid { grid-template-columns: repeat(2, 1fr); }
+  .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 768px) {
-  .tabBar { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabBar { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--space-2); }
   .tab { white-space: nowrap; }
-  .relatedGrid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
   .thumbnails { overflow-x: auto; }
+}
+
+@media (max-width: 480px) {
+  .relatedGrid { grid-template-columns: 1fr; }
 }

@@ -199,6 +199,12 @@ export default function Navbar() {
       {mobileOpen && (
         <div className={styles.mobileOverlay} onClick={() => setMobileOpen(false)}>
           <div className={styles.mobileMenu} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.closeBtn} onClick={() => setMobileOpen(false)} aria-label="Close menu">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
             <div className={styles.mobileLinks}>
               <Link href="/" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Home</Link>
               <Link href="/shop" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Shop All</Link>

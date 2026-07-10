@@ -306,9 +306,27 @@
   width: 320px;
   max-width: 85vw;
   background: var(--color-surface);
-  padding: var(--space-20) var(--space-6) var(--space-6);
+  padding: var(--space-8) var(--space-6) var(--space-6);
   animation: slideInRight 0.3s ease;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.closeBtn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.closeBtn:hover {
+  background: var(--color-border-light);
 }
 
 .mobileLinks {

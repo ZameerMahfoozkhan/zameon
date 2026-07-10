@@ -105,16 +105,21 @@ export default function ProductPage() {
             {/* Gallery */}
             <div className={styles.gallery}>
               <div className={styles.mainImage}>
-                <div className={styles.imagePlaceholder}>
-                  <span className={styles.placeholderLabel}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.25}}>
-                      <rect width="18" height="18" x="3" y="3" rx="2"/>
-                      <circle cx="9" cy="9" r="2"/>
-                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                    </svg>
-                    Product Image {selectedImage + 1} of {Math.max(1, Number(product.images) || 1)}
-                  </span>
-                </div>
+                {product.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px', display: 'block' }} />
+                ) : (
+                  <div className={styles.imagePlaceholder}>
+                    <span className={styles.placeholderLabel}>
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.25}}>
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <circle cx="9" cy="9" r="2"/>
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                      </svg>
+                      Product Image {selectedImage + 1} of {Math.max(1, Number(product.images) || 1)}
+                    </span>
+                  </div>
+                )}
                 {product.badge && (
                   <span className={`badge ${product.badge === 'Sale' ? 'badge-sale' : product.badge === 'New' ? 'badge-new' : 'badge-best-seller'} ${styles.galleryBadge}`}>
                     {product.badge}
