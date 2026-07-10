@@ -27,14 +27,29 @@ export async function getProductsFromFirestore() {
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
-export async function getProductByIdFromFirestore(id) {
-  const docRef = doc(db, 'products', id);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() };
+export const getProductByIdFromFirestore = async (id) => {
+  try {
+    let docRef = doc(db, 'products', id);
+    let docSnap = await getDoc(docRef);
+    
+    if (!docSnap.exists()) {
+      // Fallback: if id contains spaces, try replacing with dashes
+      const dashedId = id.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      if (dashedId !== id) {
+        docRef = doc(db, 'products', dashedId);
+        docSnap = await getDoc(docRef);
+      }
+    }
+    
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching product by id:', error);
+    return null;
   }
-  return null;
-}
+};
 
 export async function addProductToFirestore(productData) {
   const docRef = doc(db, 'products', productData.id);

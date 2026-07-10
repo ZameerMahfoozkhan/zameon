@@ -18,7 +18,14 @@ const initialState = {
 function storeReducer(state, action) {
   switch (action.type) {
     case 'INIT_FROM_STORAGE':
-      return { ...state, ...action.payload };
+      return { 
+        ...state, 
+        ...action.payload,
+        cart: action.payload.cart || [],
+        wishlist: action.payload.wishlist || [],
+        recentlyViewed: action.payload.recentlyViewed || [],
+        searchHistory: action.payload.searchHistory || []
+      };
 
     case 'ADD_TO_CART': {
       const existing = state.cart.find(
