@@ -113,7 +113,7 @@ export default function ProductPage() {
                       <circle cx="9" cy="9" r="2"/>
                       <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
                     </svg>
-                    Product Image {selectedImage + 1} of {product.images || 1}
+                    Product Image {selectedImage + 1} of {Math.max(1, Number(product.images) || 1)}
                   </span>
                 </div>
                 {product.badge && (
@@ -123,7 +123,7 @@ export default function ProductPage() {
                 )}
               </div>
               <div className={styles.thumbnails}>
-                {[...Array(product.images || 1)].map((_, i) => (
+                {[...Array(Math.max(1, Number(product.images) || 1))].map((_, i) => (
                   <button
                     key={i}
                     className={`${styles.thumbnail} ${selectedImage === i ? styles.thumbnailActive : ''}`}
@@ -169,7 +169,7 @@ export default function ProductPage() {
                 <p className={styles.productDesc}>{product.description}</p>
 
                 {/* Variants */}
-                {product.variants?.color && (
+                {Array.isArray(product.variants?.color) && product.variants.color.length > 0 && (
                   <div className={styles.variantGroup}>
                     <label className={styles.variantLabel}>Color: <strong>{selectedColor}</strong></label>
                     <div className={styles.variantOptions}>
@@ -186,7 +186,7 @@ export default function ProductPage() {
                   </div>
                 )}
 
-                {product.variants?.size && (
+                {Array.isArray(product.variants?.size) && product.variants.size.length > 0 && (
                   <div className={styles.variantGroup}>
                     <label className={styles.variantLabel}>Size: <strong>{selectedSize}</strong></label>
                     <div className={styles.variantOptions}>
@@ -279,7 +279,7 @@ export default function ProductPage() {
                 <p>{product.description}</p>
                 <h3>Key Features</h3>
                 <ul className={styles.featureList}>
-                  {(product.features || []).map((f, i) => (
+                  {Array.isArray(product.features) && product.features.map((f, i) => (
                     <li key={i}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2.5"><path d="M20 6 9 17l-5-5"/></svg>
                       {f}
@@ -293,7 +293,7 @@ export default function ProductPage() {
               <div className={styles.specsContent}>
                 <table className={styles.specsTable}>
                   <tbody>
-                    {Object.entries(product.specs || {}).map(([key, value]) => (
+                    {typeof product.specs === 'object' && product.specs !== null && Object.entries(product.specs).map(([key, value]) => (
                       <tr key={key}>
                         <td className={styles.specKey}>{key}</td>
                         <td className={styles.specValue}>{value}</td>
