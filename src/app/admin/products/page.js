@@ -100,32 +100,62 @@ export default function AdminProducts() {
     
     // Upload image if selected
     if (formData.imageFile) {
-      const formPayload = new FormData();
-      formPayload.append('file', formData.imageFile);
-      
-      try {
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formPayload,
-        });
+      if (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) {
+        // Direct browser-to-Cloudinary upload (Bypasses Vercel server limits)
+        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+        const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
         
-        if (!res.ok) {
-          throw new Error('Upload failed');
-        }
+        const cloudinaryFormData = new FormData();
+        cloudinaryFormData.append('file', formData.imageFile);
+        cloudinaryFormData.append('upload_preset', uploadPreset);
         
-        const uploadRes = await res.json();
-        
-        if (uploadRes.error) {
-          alert(uploadRes.error);
+        try {
+          const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: cloudinaryFormData,
+          });
+          
+          const cloudinaryData = await cloudinaryRes.json();
+          if (cloudinaryData.secure_url) {
+            imageUrl = cloudinaryData.secure_url;
+          } else {
+            throw new Error(cloudinaryData.error?.message || 'Cloudinary upload failed');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Failed to upload image directly to Cloudinary. Please check your Cloud Name and Upload Preset in Vercel.');
           setLoading(false);
           return;
         }
-        imageUrl = uploadRes.url;
-      } catch (err) {
-        console.error(err);
-        alert('Failed to upload image. Please try again or use a smaller file.');
-        setLoading(false);
-        return;
+      } else {
+        // Fallback to local server API (Works on localhost, fails on Vercel)
+        const formPayload = new FormData();
+        formPayload.append('file', formData.imageFile);
+        
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formPayload,
+          });
+          
+          if (!res.ok) {
+            throw new Error('Upload failed');
+          }
+          
+          const uploadRes = await res.json();
+          
+          if (uploadRes.error) {
+            alert(uploadRes.error);
+            setLoading(false);
+            return;
+          }
+          imageUrl = uploadRes.url;
+        } catch (err) {
+          console.error(err);
+          alert('Failed to upload image to local server. Please use a smaller file or configure Cloudinary.');
+          setLoading(false);
+          return;
+        }
       }
     }
     
