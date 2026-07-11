@@ -69,6 +69,11 @@ export default function ProductPage() {
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
 
+  const allImages = product.images && product.images.length > 0 
+    ? product.images 
+    : (product.image ? [product.image] : []);
+  const currentImage = allImages[selectedImage] || product.image;
+
   const handleAddToCart = () => {
     const variant = [selectedColor, selectedSize].filter(Boolean).join(' / ') || 'default';
     addToCart(product, variant, quantity);
@@ -123,9 +128,9 @@ export default function ProductPage() {
             {/* Gallery */}
             <div className={styles.gallery}>
               <div className={styles.mainImage}>
-                {product.image ? (
+                {currentImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px', display: 'block' }} />
+                  <img src={currentImage} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px', display: 'block' }} />
                 ) : (
                   <div className={styles.imagePlaceholder}>
                     <span className={styles.placeholderLabel}>
@@ -134,7 +139,7 @@ export default function ProductPage() {
                         <circle cx="9" cy="9" r="2"/>
                         <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
                       </svg>
-                      Product Image {selectedImage + 1} of {Math.max(1, Number(product.images) || 1)}
+                      Product Image {selectedImage + 1} of {Math.max(1, allImages.length)}
                     </span>
                   </div>
                 )}
@@ -145,13 +150,14 @@ export default function ProductPage() {
                 )}
               </div>
               <div className={styles.thumbnails}>
-                {[...Array(Math.max(1, Number(product.images) || 1))].map((_, i) => (
+                {allImages.length > 1 && allImages.map((img, i) => (
                   <button
                     key={i}
                     className={`${styles.thumbnail} ${selectedImage === i ? styles.thumbnailActive : ''}`}
                     onClick={() => setSelectedImage(i)}
+                    style={{ padding: 0, overflow: 'hidden' }}
                   >
-                    <span>{i + 1}</span>
+                    <img src={img} alt={`Thumbnail ${i+1}`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                   </button>
                 ))}
               </div>

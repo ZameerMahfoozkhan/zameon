@@ -20,6 +20,10 @@ export async function getProductsByCollection(collection) {
 
 export async function getFeaturedProducts(count = 8) {
   const products = await getAllProducts();
+  const trending = products.filter(p => p.isTrending);
+  if (trending.length > 0) {
+    return trending.slice(0, count);
+  }
   return products.slice(0, count);
 }
 

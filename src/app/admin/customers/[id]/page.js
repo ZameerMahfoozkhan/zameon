@@ -83,9 +83,9 @@ export default function CustomerDetailsPage() {
                       <td style={{ fontWeight: '500' }}>{formatPrice(order.grandTotal)}</td>
                       <td>
                         <span className={`${styles.badge} ${
-                          order.status === 'Delivered' ? styles.badgeSuccess : 
-                          order.status === 'Cancelled' ? styles.badgeError : 
-                          order.status === 'Processing' ? styles.badgeWarning : styles.badgeNeutral
+                          (order.status || '').toLowerCase() === 'delivered' ? styles.badgeSuccess : 
+                          (order.status || '').toLowerCase() === 'cancelled' ? styles.badgeError : 
+                          (order.status || '').toLowerCase() === 'processing' ? styles.badgeWarning : styles.badgeNeutral
                         }`}>
                           {order.status || 'Processing'}
                         </span>

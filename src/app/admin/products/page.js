@@ -24,9 +24,11 @@ export default function AdminProducts() {
     sizeVariants: '',
     stock: 0,
     image: '',
-    imageFile: null,
+    images: [],
+    imageFiles: [],
     inStock: true,
     freeShipping: true,
+    isTrending: false,
   });
 
   const fetchProducts = async () => {
@@ -58,9 +60,11 @@ export default function AdminProducts() {
         sizeVariants: product.variants?.size ? product.variants.size.join(', ') : '',
         stock: product.stock || 42,
         image: product.image || '',
-        imageFile: null,
+        images: product.images || (product.image ? [product.image] : []),
+        imageFiles: [],
         inStock: product.inStock !== false,
         freeShipping: product.freeShipping !== false,
+        isTrending: product.isTrending || false,
       });
     } else {
       setEditingProduct(null);
@@ -79,9 +83,11 @@ export default function AdminProducts() {
         sizeVariants: '',
         stock: 0,
         image: '',
-        imageFile: null,
+        images: [],
+        imageFiles: [],
         inStock: true,
         freeShipping: true,
+        isTrending: false,
       });
     }
     setIsModalOpen(true);
@@ -96,65 +102,52 @@ export default function AdminProducts() {
     e.preventDefault();
     setLoading(true);
     
-    let imageUrl = formData.image;
+    let imageUrls = formData.images || (formData.image ? [formData.image] : []);
     
     // Upload image if selected
-    if (formData.imageFile) {
+    if (formData.imageFiles && formData.imageFiles.length > 0) {
       if (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) {
-        // Direct browser-to-Cloudinary upload (Bypasses Vercel server limits)
         const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
         const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
         
-        const cloudinaryFormData = new FormData();
-        cloudinaryFormData.append('file', formData.imageFile);
-        cloudinaryFormData.append('upload_preset', uploadPreset);
-        
-        try {
-          const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-            method: 'POST',
-            body: cloudinaryFormData,
-          });
+        for (const file of formData.imageFiles) {
+          const cloudinaryFormData = new FormData();
+          cloudinaryFormData.append('file', file);
+          cloudinaryFormData.append('upload_preset', uploadPreset);
           
-          const cloudinaryData = await cloudinaryRes.json();
-          if (cloudinaryData.secure_url) {
-            imageUrl = cloudinaryData.secure_url;
-          } else {
-            throw new Error(cloudinaryData.error?.message || 'Cloudinary upload failed');
+          try {
+            const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+              method: 'POST',
+              body: cloudinaryFormData,
+            });
+            
+            const cloudinaryData = await cloudinaryRes.json();
+            if (cloudinaryData.secure_url) {
+              imageUrls.push(cloudinaryData.secure_url);
+            } else {
+              console.error(cloudinaryData.error?.message || 'Cloudinary upload failed');
+            }
+          } catch (err) {
+            console.error(err);
           }
-        } catch (err) {
-          console.error(err);
-          alert('Failed to upload image directly to Cloudinary. Please check your Cloud Name and Upload Preset in Vercel.');
-          setLoading(false);
-          return;
         }
       } else {
-        // Fallback to local server API (Works on localhost, fails on Vercel)
-        const formPayload = new FormData();
-        formPayload.append('file', formData.imageFile);
-        
-        try {
-          const res = await fetch('/api/upload', {
-            method: 'POST',
-            body: formPayload,
-          });
-          
-          if (!res.ok) {
-            throw new Error('Upload failed');
+        // Local fallback for multiple files
+        for (const file of formData.imageFiles) {
+          const formPayload = new FormData();
+          formPayload.append('file', file);
+          try {
+            const res = await fetch('/api/upload', {
+              method: 'POST',
+              body: formPayload,
+            });
+            const uploadRes = await res.json();
+            if (!uploadRes.error) {
+              imageUrls.push(uploadRes.url);
+            }
+          } catch (err) {
+            console.error(err);
           }
-          
-          const uploadRes = await res.json();
-          
-          if (uploadRes.error) {
-            alert(uploadRes.error);
-            setLoading(false);
-            return;
-          }
-          imageUrl = uploadRes.url;
-        } catch (err) {
-          console.error(err);
-          alert('Failed to upload image to local server. Please use a smaller file or configure Cloudinary.');
-          setLoading(false);
-          return;
         }
       }
     }
@@ -179,9 +172,11 @@ export default function AdminProducts() {
         size: sizeArray.length > 0 ? sizeArray : undefined,
       },
       stock: Number(formData.stock),
-      image: imageUrl,
+      image: imageUrls.length > 0 ? imageUrls[0] : '',
+      images: imageUrls,
       inStock: formData.inStock,
       freeShipping: formData.freeShipping,
+      isTrending: formData.isTrending,
     };
 
     // Remove empty variant arrays entirely to prevent Firebase errors
@@ -247,7 +242,11 @@ export default function AdminProducts() {
               {products.map((product) => (
                 <tr key={product.id}>
                   <td>
-                    <div style={{ width: '40px', height: '40px', background: '#E5E7EB', borderRadius: '4px' }}></div>
+                    <div style={{ width: '40px', height: '40px', background: '#E5E7EB', borderRadius: '4px', overflow: 'hidden' }}>
+                      {(product.images?.[0] || product.image) ? (
+                        <img src={product.images?.[0] || product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : null}
+                    </div>
                   </td>
                   <td>
                     <div style={{ fontWeight: '500' }}>{product.name}</div>
@@ -261,6 +260,9 @@ export default function AdminProducts() {
                       <span className={`${styles.badge} ${styles.badgeSuccess}`}>In Stock</span>
                     ) : (
                       <span className={`${styles.badge} ${styles.badgeError}`}>Out of Stock</span>
+                    )}
+                    {product.isTrending && (
+                      <span className={`${styles.badge} ${styles.badgeWarning}`} style={{ marginLeft: '4px', backgroundColor: 'var(--color-primary-light)', color: 'var(--color-primary-dark)' }}>Trending</span>
                     )}
                   </td>
                   <td style={{ textAlign: 'right' }}>
@@ -363,6 +365,10 @@ export default function AdminProducts() {
                     <input type="checkbox" checked={formData.freeShipping} onChange={(e) => setFormData({...formData, freeShipping: e.target.checked})} style={{ width: '18px', height: '18px' }} />
                     <span style={{ fontWeight: '500' }}>Free Shipping</span>
                   </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '24px' }}>
+                    <input type="checkbox" checked={formData.isTrending} onChange={(e) => setFormData({...formData, isTrending: e.target.checked})} style={{ width: '18px', height: '18px' }} />
+                    <span style={{ fontWeight: '500' }}>Trending</span>
+                  </label>
                 </div>
               </div>
 
@@ -385,18 +391,55 @@ export default function AdminProducts() {
               <div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '12px', color: 'var(--color-primary)', borderBottom: '1px solid #e5e7eb', paddingBottom: '8px' }}>Media & Options</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
-                  <div className="input-group">
-                    <label className="input-label">Product Image</label>
-                    <input type="file" className="input" accept="image/*" onChange={(e) => {
-                      if(e.target.files && e.target.files[0]) {
-                        setFormData({...formData, imageFile: e.target.files[0]});
+                  <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+                    <label className="input-label">Product Images</label>
+                    <input type="file" className="input" accept="image/*" multiple onChange={(e) => {
+                      if(e.target.files && e.target.files.length > 0) {
+                        const newFiles = Array.from(e.target.files);
+                        setFormData(prev => ({
+                          ...prev, 
+                          imageFiles: [...prev.imageFiles, ...newFiles]
+                        }));
+                        // Clear the input so the same file can be selected again if needed
+                        e.target.value = '';
                       }
                     }} style={{ padding: '8px' }} />
-                    {formData.image && !formData.imageFile && (
-                      <div style={{ marginTop: '8px', fontSize: '12px', color: 'var(--color-primary)' }}>
-                        Current image: <img src={formData.image} alt="preview" style={{width: '30px', height: '30px', objectFit: 'cover', verticalAlign: 'middle', marginLeft: '4px'}} />
-                      </div>
-                    )}
+                    
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
+                      {/* Existing Uploaded Images */}
+                      {formData.images && formData.images.map((img, idx) => (
+                        <div key={`existing-${idx}`} style={{ position: 'relative', width: '60px', height: '60px' }}>
+                          <img src={img} alt={`existing-${idx}`} style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--border-color)'}} />
+                          <button 
+                            type="button" 
+                            onClick={() => {
+                              const newImages = [...formData.images];
+                              newImages.splice(idx, 1);
+                              setFormData({...formData, images: newImages});
+                            }}
+                            style={{ position: 'absolute', top: '-6px', right: '-6px', background: 'var(--color-error)', color: 'white', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            &times;
+                          </button>
+                        </div>
+                      ))}
+                      
+                      {/* Newly Selected Local Files */}
+                      {formData.imageFiles && formData.imageFiles.map((file, idx) => (
+                        <div key={`new-${idx}`} style={{ position: 'relative', width: '60px', height: '60px' }}>
+                          <img src={URL.createObjectURL(file)} alt={`new-${idx}`} style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px', border: '2px solid var(--color-primary)'}} />
+                          <button 
+                            type="button" 
+                            onClick={() => {
+                              const newFiles = [...formData.imageFiles];
+                              newFiles.splice(idx, 1);
+                              setFormData({...formData, imageFiles: newFiles});
+                            }}
+                            style={{ position: 'absolute', top: '-6px', right: '-6px', background: 'var(--color-error)', color: 'white', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            &times;
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <div className="input-group">
                     <label className="input-label">Colors (Comma separated)</label>

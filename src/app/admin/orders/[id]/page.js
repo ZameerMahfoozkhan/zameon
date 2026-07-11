@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getOrderById, updateOrderStatus } from '@/lib/firestore';
+import { listenToOrder, updateOrderStatus, getUserById } from '@/lib/firestore';
 import { formatPrice } from '@/lib/products';
 import styles from '../../admin.module.css';
 
@@ -10,33 +10,38 @@ export default function OrderDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const [order, setOrder] = useState(null);
+  const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    async function fetchOrder() {
-      if (!id) return;
-      try {
-        const data = await getOrderById(id);
-        setOrder(data);
-        if (data) {
-          setStatus(data.status || 'processing');
+    if (!id) return;
+    setLoading(true);
+    const unsubscribe = listenToOrder(id, async (data) => {
+      setOrder(data);
+      if (data) {
+        setStatus(data.status || 'processing');
+        if (data.userId && !customer) {
+          try {
+            const userData = await getUserById(data.userId);
+            setCustomer(userData);
+          } catch (err) {
+            console.error("Failed to fetch customer", err);
+          }
         }
-      } catch (err) {
-        console.error("Failed to fetch order", err);
-      } finally {
-        setLoading(false);
       }
-    }
-    fetchOrder();
-  }, [id]);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [id, customer]);
 
   const handleUpdateStatus = async () => {
     if (!order) return;
     setSaving(true);
     try {
-      await updateOrderStatus(id, status);
+      await updateOrderStatus(id, status, order.userId);
       setOrder({ ...order, status });
       alert('Order status updated successfully');
     } catch (err) {
@@ -123,10 +128,55 @@ export default function OrderDetailsPage() {
             <h3 style={{ fontWeight: '600', marginBottom: 'var(--space-4)', borderBottom: '1px solid var(--admin-border)', paddingBottom: 'var(--space-2)' }}>Order Info</h3>
             <p style={{ marginBottom: 'var(--space-2)' }}><strong>Order ID:</strong> {order.id}</p>
             <p style={{ marginBottom: 'var(--space-2)' }}><strong>Date:</strong> {order.createdAt ? new Date(order.createdAt).toLocaleString() : 'N/A'}</p>
-            <p style={{ marginBottom: 'var(--space-2)' }}><strong>Customer ID:</strong> {order.userId}</p>
             <p style={{ marginBottom: 'var(--space-2)' }}>
               <strong>Payment Method:</strong> {order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Prepaid)'}
             </p>
+            <div style={{ marginTop: 'var(--space-4)' }}>
+              <h4 style={{ fontWeight: '600', marginBottom: 'var(--space-2)' }}>Customer Details</h4>
+              <p style={{ marginBottom: 'var(--space-1)' }}><strong>ID:</strong> {order.userId}</p>
+              {customer && (
+                <>
+                  <p style={{ marginBottom: 'var(--space-1)' }}><strong>Name:</strong> {customer.name || customer.displayName || 'N/A'}</p>
+                  <p style={{ marginBottom: 'var(--space-1)' }}><strong>Email:</strong> {customer.email || 'N/A'}</p>
+                  <p style={{ marginBottom: 'var(--space-1)' }}><strong>Phone:</strong> {customer.phone || 'N/A'}</p>
+                </>
+              )}
+            </div>
+            {order.shippingAddress && (
+              <div style={{ marginTop: 'var(--space-4)' }}>
+                <h4 style={{ fontWeight: '600', marginBottom: 'var(--space-2)' }}>Shipping Address</h4>
+                <p style={{ marginBottom: 'var(--space-1)' }}>{order.shippingAddress.street}</p>
+                <p style={{ marginBottom: 'var(--space-1)' }}>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zip}</p>
+                <p style={{ marginBottom: 'var(--space-1)' }}><strong>Phone:</strong> {order.shippingAddress.phone || 'N/A'}</p>
+              </div>
+            )}
+          </div>
+
+          <div className={styles.card} style={{ padding: 'var(--space-6)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+            <h3 style={{ fontWeight: '600', fontSize: 'var(--font-size-lg)', marginBottom: 'var(--space-2)', paddingBottom: 'var(--space-3)', borderBottom: '1px solid var(--admin-border)' }}>Order Timeline</h3>
+            <div className={styles.timeline}>
+              <div className={styles.timelineItem}>
+                <div className={`${styles.timelineDot} ${styles.timelineDotCompleted}`} />
+                <div className={styles.timelineContent}>
+                  <div className={styles.timelineTitle}>Order Placed</div>
+                  <div className={styles.timelineDate}>{order.createdAt ? new Date(order.createdAt).toLocaleString() : 'Pending'}</div>
+                </div>
+              </div>
+              <div className={styles.timelineItem}>
+                <div className={`${styles.timelineDot} ${order.shippedAt || order.deliveredAt ? styles.timelineDotCompleted : ''}`} />
+                <div className={styles.timelineContent}>
+                  <div className={styles.timelineTitle} style={{ color: order.shippedAt || order.deliveredAt ? 'inherit' : 'var(--admin-text-secondary)' }}>Order Shipped</div>
+                  <div className={styles.timelineDate}>{order.shippedAt ? new Date(order.shippedAt).toLocaleString() : 'Pending'}</div>
+                </div>
+              </div>
+              <div className={styles.timelineItem}>
+                <div className={`${styles.timelineDot} ${order.deliveredAt ? styles.timelineDotSuccess : ''}`} />
+                <div className={styles.timelineContent}>
+                  <div className={styles.timelineTitle} style={{ color: order.deliveredAt ? 'inherit' : 'var(--admin-text-secondary)' }}>Order Delivered</div>
+                  <div className={styles.timelineDate}>{order.deliveredAt ? new Date(order.deliveredAt).toLocaleString() : 'Pending'}</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className={styles.card}>

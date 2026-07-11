@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/AuthContext';
-import { getUserOrders, updateUserProfile } from '@/lib/firestore';
+import { listenToUserOrders, updateUserProfile } from '@/lib/firestore';
 import { formatPrice } from '@/lib/products';
 import Link from 'next/link';
 import styles from './account.module.css';
@@ -46,20 +46,21 @@ function AccountContent() {
   }, [userProfile]);
 
   useEffect(() => {
+    let unsubscribe = null;
     const fetchOrders = async () => {
       if (user && activeTab === 'orders') {
         setLoadingOrders(true);
-        try {
-          const fetchedOrders = await getUserOrders(user.uid);
+        unsubscribe = listenToUserOrders(user.uid, (fetchedOrders) => {
           setOrders(fetchedOrders);
-        } catch (error) {
-          console.error('Error fetching orders:', error);
-        } finally {
           setLoadingOrders(false);
-        }
+        });
       }
     };
     fetchOrders();
+    
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [user, activeTab]);
 
   if (loading || !user) {
@@ -182,7 +183,7 @@ function AccountContent() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
                 <div>
                   <h2 className={styles.sectionTitle}>Profile Information</h2>
-                  <div className={styles.profileInfo}>
+                  <div className={styles.profileInfo} style={{ background: 'var(--background-secondary)', padding: 'var(--space-6)', borderRadius: 'var(--radius-lg)' }}>
                     <div className={styles.infoGroup}>
                       <span className={styles.infoLabel}>Full Name</span>
                       <span className={styles.infoValue}>{user.displayName || userProfile?.name || '-'}</span>
@@ -283,30 +284,30 @@ function AccountContent() {
                       </div>
                     </form>
                   ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 'var(--space-4)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--space-4)' }}>
                       {(userProfile?.addresses || []).map(address => (
-                        <div key={address.id} style={{ border: '1px solid var(--border-color)', padding: 'var(--space-4)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                        <div key={address.id} className={styles.addressCard}>
+                          <div className={styles.addressHeader}>
+                            <span className={styles.addressLabel}>
                               {address.label}
-                              {address.isDefault && <span style={{ fontSize: '10px', background: 'var(--color-primary)', color: 'white', padding: '2px 6px', borderRadius: '10px' }}>Default</span>}
+                              {address.isDefault && <span className={styles.defaultBadge}>Default</span>}
                             </span>
                           </div>
-                          <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-sm)', lineHeight: 1.5 }}>
+                          <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-sm)', lineHeight: 1.6, margin: 0 }}>
                             {address.street}<br/>
                             {address.city}, {address.state} {address.zip}<br/>
-                            Phone: {address.phone || userProfile?.phone || 'Not provided'}
+                            <strong style={{ color: 'var(--text)' }}>Phone:</strong> {address.phone || userProfile?.phone || 'Not provided'}
                           </p>
-                          <div style={{ marginTop: 'auto', paddingTop: 'var(--space-3)', display: 'flex', gap: 'var(--space-3)', fontSize: 'var(--font-size-sm)' }}>
-                            <button onClick={() => handleDeleteAddress(address.id)} style={{ color: 'var(--color-error)', background: 'none', border: 'none', cursor: 'pointer' }}>Delete</button>
+                          <div style={{ marginTop: 'auto', paddingTop: 'var(--space-4)', display: 'flex', gap: 'var(--space-3)' }}>
                             {!address.isDefault && (
-                              <button onClick={() => handleSetDefaultAddress(address.id)} style={{ color: 'var(--color-primary)', background: 'none', border: 'none', cursor: 'pointer' }}>Set as Default</button>
+                              <button onClick={() => handleSetDefaultAddress(address.id)} className="btn btn-outline btn-sm" style={{ flex: 1 }}>Set Default</button>
                             )}
+                            <button onClick={() => handleDeleteAddress(address.id)} className="btn btn-outline btn-sm" style={{ color: 'var(--color-error)', borderColor: 'var(--color-error)' }}>Delete</button>
                           </div>
                         </div>
                       ))}
                       {(!userProfile?.addresses || userProfile.addresses.length === 0) && (
-                        <p style={{ color: 'var(--text-secondary)' }}>You haven't saved any addresses yet.</p>
+                        <p style={{ color: 'var(--text-secondary)', gridColumn: '1 / -1' }}>You haven't saved any addresses yet.</p>
                       )}
                     </div>
                   )}
@@ -335,7 +336,7 @@ function AccountContent() {
                               {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Pending'}
                             </div>
                             <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-                              <div className={`${styles.orderStatus} ${styles['status' + (order.status || 'Processing')]}`}>
+                              <div className={`${styles.orderStatus} ${styles['status' + (order.status || 'processing').toLowerCase()]}`}>
                                 {order.status || 'Processing'}
                               </div>
                               <div className={styles.orderStatus} style={{ background: 'var(--background-secondary)', color: 'var(--text-secondary)' }}>
@@ -355,53 +356,89 @@ function AccountContent() {
                         </div>
 
                         {expandedOrderId === order.id && (
-                          <div style={{ padding: 'var(--space-4)', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--background-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
-                              <div>
-                                <h4 style={{ fontWeight: '600', marginBottom: 'var(--space-2)' }}>Order Summary</h4>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-1)' }}>
+                          <div style={{ padding: 'var(--space-6)', backgroundColor: 'white', fontSize: 'var(--font-size-sm)', animation: 'fadeIn 0.2s ease' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-8)', marginBottom: 'var(--space-8)' }}>
+                              <div style={{ background: 'var(--background-secondary)', padding: 'var(--space-5)', borderRadius: 'var(--radius-lg)' }}>
+                                <h4 style={{ fontWeight: '700', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                  Order Summary
+                                </h4>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
                                   <span style={{ color: 'var(--text-secondary)' }}>Subtotal</span>
-                                  <span>{formatPrice(order.subtotal || 0)}</span>
+                                  <span style={{ fontWeight: '500' }}>{formatPrice(order.subtotal || 0)}</span>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-1)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
                                   <span style={{ color: 'var(--text-secondary)' }}>Shipping</span>
-                                  <span>{formatPrice(order.shipping || 0)}</span>
+                                  <span style={{ fontWeight: '500' }}>{formatPrice(order.shipping || 0)}</span>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-1)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
                                   <span style={{ color: 'var(--text-secondary)' }}>Tax</span>
-                                  <span>{formatPrice(order.tax || 0)}</span>
+                                  <span style={{ fontWeight: '500' }}>{formatPrice(order.tax || 0)}</span>
                                 </div>
                                 {order.discount > 0 && (
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-1)', color: 'var(--color-success)' }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-2)', color: 'var(--color-success)' }}>
                                     <span>Discount</span>
-                                    <span>-{formatPrice(order.discount)}</span>
+                                    <span style={{ fontWeight: '500' }}>-{formatPrice(order.discount)}</span>
                                   </div>
                                 )}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--space-2)', paddingTop: 'var(--space-2)', borderTop: '1px solid var(--border-color)', fontWeight: 'bold' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--space-4)', paddingTop: 'var(--space-4)', borderTop: '1px dashed var(--border-color)', fontWeight: '700', fontSize: 'var(--font-size-base)' }}>
                                   <span>Grand Total</span>
-                                  <span>{formatPrice(order.grandTotal || 0)}</span>
+                                  <span style={{ color: 'var(--color-primary)' }}>{formatPrice(order.grandTotal || 0)}</span>
                                 </div>
                               </div>
                               
-                              <div>
-                                <h4 style={{ fontWeight: '600', marginBottom: 'var(--space-2)' }}>Shipping Address</h4>
+                              <div style={{ background: 'var(--background-secondary)', padding: 'var(--space-5)', borderRadius: 'var(--radius-lg)' }}>
+                                <h4 style={{ fontWeight: '700', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                  Shipping Address
+                                </h4>
                                 {order.shippingAddress ? (
-                                  <p style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                                  <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
                                     {order.shippingAddress.street}<br/>
                                     {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zip}<br/>
-                                    Phone: {order.shippingAddress.phone || 'N/A'}
+                                    <span style={{ display: 'inline-block', marginTop: 'var(--space-2)' }}>
+                                      <strong style={{ color: 'var(--text)' }}>Phone:</strong> {order.shippingAddress.phone || 'N/A'}
+                                    </span>
                                   </p>
                                 ) : (
-                                  <p style={{ color: 'var(--text-secondary)' }}>No address provided</p>
+                                  <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>No address provided</p>
                                 )}
                               </div>
                             </div>
-                            <h4 style={{ fontWeight: '600', marginBottom: 'var(--space-3)' }}>Items</h4>
-                            <div className={styles.orderItems} style={{ borderTop: 'none', padding: 0 }}>
+                            
+                            <h4 style={{ fontWeight: '700', marginBottom: 'var(--space-4)', fontSize: 'var(--font-size-md)' }}>Order Timeline</h4>
+                            <div style={{ background: 'var(--background-secondary)', padding: 'var(--space-6)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-8)' }}>
+                              <div className={styles.timeline} style={{ margin: 0 }}>
+                                <div className={styles.timelineItem}>
+                                  <div className={`${styles.timelineDot} ${styles.timelineDotCompleted}`} />
+                                <div className={styles.timelineContent}>
+                                  <div className={styles.timelineTitle}>Order Placed</div>
+                                  <div className={styles.timelineDate}>{order.createdAt ? new Date(order.createdAt).toLocaleString() : 'Pending'}</div>
+                                </div>
+                              </div>
+                              <div className={styles.timelineItem}>
+                                <div className={`${styles.timelineDot} ${order.shippedAt || order.deliveredAt ? styles.timelineDotCompleted : ''}`} />
+                                <div className={styles.timelineContent}>
+                                  <div className={styles.timelineTitle} style={{ color: order.shippedAt || order.deliveredAt ? 'inherit' : 'var(--text-secondary)' }}>Order Shipped</div>
+                                  <div className={styles.timelineDate}>{order.shippedAt ? new Date(order.shippedAt).toLocaleString() : 'Pending'}</div>
+                                </div>
+                              </div>
+                              <div className={styles.timelineItem}>
+                                <div className={`${styles.timelineDot} ${order.deliveredAt ? styles.timelineDotSuccess : ''}`} />
+                                <div className={styles.timelineContent}>
+                                  <div className={styles.timelineTitle} style={{ color: order.deliveredAt ? 'inherit' : 'var(--text-secondary)' }}>Order Delivered</div>
+                                  <div className={styles.timelineDate}>{order.deliveredAt ? new Date(order.deliveredAt).toLocaleString() : 'Pending'}</div>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+
+                            <h4 style={{ fontWeight: '700', marginBottom: 'var(--space-4)', fontSize: 'var(--font-size-md)' }}>Items</h4>
+                            <div className={styles.orderItems}>
                               {order.items.map((item, i) => (
                                 <div key={i} className={styles.orderItem}>
                                   <div>
-                                    <div className={styles.itemName}>{item.name} <span style={{ color: 'var(--text-secondary)' }}>x{item.quantity}</span></div>
+                                    <div className={styles.itemName}>{item.name} <span style={{ color: 'var(--text-secondary)', marginLeft: '8px', background: 'var(--background-secondary)', padding: '2px 6px', borderRadius: '4px' }}>x{item.quantity}</span></div>
                                     {item.variant !== 'default' && <div className={styles.itemVariant}>{item.variant}</div>}
                                   </div>
                                   <div className={styles.itemPrice}>{formatPrice(item.price * item.quantity)}</div>

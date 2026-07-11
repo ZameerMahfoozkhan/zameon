@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCart, useWishlist, useStore } from '@/lib/store';
 import { useAuth } from '@/lib/AuthContext';
+import { getNotifications, markNotificationsAsRead, subscribeToNotifications } from '@/lib/firestore';
 import styles from './Navbar.module.css';
 
 const categories = [
@@ -23,7 +24,31 @@ export default function Navbar() {
   const { dispatch } = useStore();
   const { user, signOut } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const megaRef = useRef(null);
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = subscribeToNotifications(user.uid, (notifs) => {
+        setNotifications(notifs);
+      });
+      return () => unsubscribe();
+    }
+  }, [user]);
+
+  const handleOpenNotifications = async () => {
+    setNotificationsOpen(!notificationsOpen);
+    if (!notificationsOpen) {
+      const unread = notifications.filter(n => !n.read);
+      if (unread.length > 0) {
+        await markNotificationsAsRead(user.uid);
+        setNotifications(notifications.map(n => ({ ...n, read: true })));
+      }
+    }
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -147,6 +172,36 @@ export default function Navbar() {
                 <span className={styles.navBadge}>{count}</span>
               )}
             </button>
+
+            {/* User Notifications */}
+            {user && (
+              <div style={{ position: 'relative' }}>
+                <button className={styles.navAction} aria-label="Notifications" onClick={handleOpenNotifications}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  {unreadCount > 0 && (
+                    <span className={styles.navBadge} style={{ background: 'var(--color-error)' }}>{unreadCount}</span>
+                  )}
+                </button>
+                {notificationsOpen && (
+                  <div style={{ position: 'absolute', top: '100%', right: '0', background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', width: '300px', maxHeight: '400px', overflowY: 'auto', boxShadow: 'var(--shadow-md)', zIndex: 10 }}>
+                    <div style={{ padding: 'var(--space-2) var(--space-3)', borderBottom: '1px solid var(--border)', fontWeight: 'bold', color: 'var(--text)' }}>Notifications</div>
+                    {notifications.length === 0 ? (
+                      <div style={{ padding: 'var(--space-3)', color: 'var(--text-secondary)' }}>No new notifications</div>
+                    ) : (
+                      notifications.map(n => {
+                        const linkHref = n.data?.orderId ? `/account?tab=orders` : '#';
+                        return (
+                          <Link href={linkHref} key={n.id} style={{ display: 'block', padding: 'var(--space-3)', borderBottom: '1px solid var(--border)', background: n.read ? 'white' : 'var(--background-secondary)', textDecoration: 'none' }} onClick={() => setNotificationsOpen(false)}>
+                            <p style={{ margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--text)' }}>{n.message}</p>
+                            <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>{n.createdAt ? new Date(n.createdAt).toLocaleString() : 'Just now'}</span>
+                          </Link>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* User Menu */}
             {user ? (

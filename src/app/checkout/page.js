@@ -103,6 +103,8 @@ export default function CheckoutPage() {
 
       const orderData = {
         userId: user.uid,
+        customerName: contactInfo.firstName + ' ' + contactInfo.lastName,
+        customerEmail: contactInfo.email,
         items,
         subtotal: total,
         shipping,
@@ -263,7 +265,38 @@ export default function CheckoutPage() {
                 
                 <div className={styles.formActions} style={{ marginTop: 'var(--space-8)' }}>
                   <button onClick={() => router.push('/cart')} className="btn btn-ghost">← Return to Cart</button>
-                  <button className="btn btn-primary btn-lg" onClick={() => setStep(1)}>Continue to Shipping</button>
+                  <button className="btn btn-primary btn-lg" onClick={() => {
+                    if (!contactInfo.email || !contactInfo.firstName) {
+                      alert("Please provide at least your email and first name.");
+                      return;
+                    }
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(contactInfo.email)) {
+                      alert("Please enter a valid email address.");
+                      return;
+                    }
+
+                    if (selectedAddressId === 'new') {
+                      if (!addressForm.street || !addressForm.city || !addressForm.state || !addressForm.zip || !addressForm.phone) {
+                        alert("Please fill in all address fields, including your phone number.");
+                        return;
+                      }
+                      
+                      // Check phone number length (at least 10 digits)
+                      const phoneDigits = addressForm.phone.replace(/[^0-9]/g, '');
+                      if (phoneDigits.length < 10) {
+                        alert("Please enter a valid phone number with at least 10 digits.");
+                        return;
+                      }
+                      
+                      // Check zip code length (at least 5 chars)
+                      if (addressForm.zip.trim().length < 5) {
+                        alert("Please enter a valid PIN/ZIP code.");
+                        return;
+                      }
+                    }
+                    setStep(1);
+                  }}>Continue to Shipping</button>
                 </div>
               </div>
             )}
